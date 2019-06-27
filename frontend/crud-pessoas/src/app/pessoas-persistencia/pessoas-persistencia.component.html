@@ -1,0 +1,71 @@
+<div class="container">
+    <h1>Cadastro de Pessoas</h1>
+    <hr>
+    <form id="idPessoaForm" [formGroup]="pessoaForm" (ngSubmit)="onPessoaFormSubmit(pessoaForm.value)">
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="">Nome:</label>
+                <input type="text" class="form-control" [(ngModel)]="pessoa$.nome" formControlName="nome">
+            </div>
+
+            <div class="form-group">
+                <label for="">CPF:</label>
+                <input type="text" class="form-control" [(ngModel)]="pessoa$.cpf" formControlName="cpf">
+            </div>
+        </div>
+
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="">E-mail:</label>
+                <input type="text" class="form-control" [(ngModel)]="pessoa$.email" formControlName="email">
+            </div>
+
+            <div class="form-group">
+                <label for="">Data de nascimento:</label>
+                <input type="text" class="form-control" [(ngModel)]="pessoa$.datanascimento"
+                    formControlName="datanascimento">
+            </div>
+        </div>
+    </form>
+
+    <hr>
+
+    <form [formGroup]="telefoneForm" (ngSubmit)="onTelefoneFormSubmit(telefoneForm.value)">
+        <div class="form-inline">
+            <div class="form-group">
+                <label for="">DDD</label>
+                <div></div>
+                <input formControlName="ddd" type="text" class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="">Número</label>
+                <div></div>
+                <input formControlName="numero" type="text" class="form-control">
+            </div>
+            <button class="btn" type="submit">Adicionar</button>
+        </div>
+    </form>
+
+    <table class="table table-hover">
+        <thead>
+            <th>id</th>
+            <th>DDD</th>
+            <th>Telefone</th>
+            <th>Ações</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let telefone of telefones">
+                <td>{{telefone.id}}</td>
+                <td>{{telefone.ddd}}</td>
+                <td>{{telefone.numero}}</td>
+                <td>
+                    <a [routerLink]="" (click)="deleteTelefone(telefone)">Deletar</a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <button class="btn" form="idPessoaForm">{{button_text$}}</button>
+    <button class="btn" [routerLink]="['/']">Voltar</button>
+</div>

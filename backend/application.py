@@ -5,6 +5,7 @@ from flask import Flask
 from config import config
 from api import configure_api
 from database import db
+from flask_cors import CORS
 
 
 def create_app(config_name):
@@ -18,10 +19,11 @@ def create_app(config_name):
 
 
 app = create_app(settings.FLASK_ENV or 'default')
+CORS(app, resources=r'/*')
 
 
 if __name__ == '__main__':
-    ip = '0.0.0.0'
+    ip = 'localhost'
     port = app.config['APP_PORT']
     debug = app.config['DEBUG']
 

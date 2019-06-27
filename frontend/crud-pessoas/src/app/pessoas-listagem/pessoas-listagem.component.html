@@ -1,0 +1,47 @@
+<div class="container">
+    <h1>Listagem de Pessoas</h1>
+    <hr>
+    <form class="form-inline ml-auto" [formGroup]="searchForm" (ngSubmit)="onSubmit(searchForm.value)">
+        <div class="form-group">
+            <label for="nome">Nome:</label>
+            <div></div>
+            <input type="text" id="nome" class="form-control" formControlName="nome">
+        </div>
+
+        <div class="form-group">
+            <label for="cpf">CPF:</label>
+            <div></div>
+            <input type="text" class="form-control" id="cpf" formControlName="cpf">
+        </div>
+
+        <button class="btn" type="submit">Pesquisar</button>
+        <button class="btn" routerLink="/pessoa-cadastro">Cadastrar</button>
+    </form>
+    <div></div>
+
+    <table class="table table-hover">
+        <thead>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>CPF</th>
+            <th>Idade</th>
+            <th>Quantidade de Telefones</th>
+            <th>Ações</th>
+        </thead>
+        <tbody>
+            <tr *ngFor="let pessoa of pessoas$">
+                <td>{{pessoa.id}}</td>
+                <td>{{pessoa.nome}}</td>
+                <td>{{pessoa.email}}</td>
+                <td>{{pessoa.cpf}}</td>
+                <td>{{getIdade(pessoa.datanascimento)}}</td>
+                <td>{{pessoa.telefones.length}}</td>
+                <td>
+                    <a [routerLink]="['/pessoa-persistencia', pessoa.id]">Editar</a> |
+                    <a [routerLink]="" (click)="deletePessoa(pessoa)">Excluir</a>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

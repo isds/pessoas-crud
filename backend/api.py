@@ -2,7 +2,7 @@ from flask_restful import Api, Resource
 
 from resources import PessoaResource, TelefoneResource
 from database import db
-
+from flask_cors import cross_origin
 
 class Index(Resource):
     def get(self):

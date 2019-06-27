@@ -3,9 +3,10 @@ from database import db
 from models import Pessoa, Telefone
 from schemas import PessoaSchema, TelefoneSchema
 from flask import request
-
+from flask_cors import cross_origin
 from responses import (response_exception, response_ok, response_resource_created,
-                       response_resource_updated, response_resource_deleted)
+                       response_resource_updated, response_resource_deleted,
+                       response_data_invalid)
 
 
 def get_pessoa_by_id(pessoa_id):
@@ -29,7 +30,7 @@ class PessoaResource(Resource):
 
         # If no data is passed return message
         if request_data is None:
-            return response_data_invalid('Pessoa', msg='Nenhum dado foi informado')
+            return response_data_invalid('Pessoa', 'Nenhum dado foi informado')
 
         data, errors = pessoa_schema.load(request_data)
 
@@ -38,8 +39,6 @@ class PessoaResource(Resource):
             return response_data_invalid('Pessoa', errors)
 
         try:
-            # Saves passed model
-            # pessoa = Pessoa(**data)
             pessoa = data
             db.session.add(pessoa)
             db.session.commit()
@@ -70,20 +69,18 @@ class PessoaResource(Resource):
             extra = {'total': 1}
 
         else:
-
             try:
                 query = Pessoa.query
                 if request.args:
                     _nome = request.args.get('nome')
                     if _nome:
-                        query = query.filter_by(nome=_nome)
+                        query = query.filter(Pessoa.nome.like(f'%{_nome}%'))
                     _cpf = request.args.get('cpf')
                     if _cpf:
-                        query = query.filter_by(cpf=_cpf)
+                        query = query.filter(Pessoa.cpf.like(f'%{_cpf}%'))
 
             except Exception as ex:
                 return response_exception('Pessoa', description=ex.__str__())
-                # return response_exception('Pessoa', description='Erro ao fazer busca.')
 
             data, errors = [], []
             for pessoa in query.all():  # for each meal
@@ -108,7 +105,7 @@ class PessoaResource(Resource):
         if not isinstance(pessoa, Pessoa):
             return pessoa
 
-        data, error = pessoa_schema.load(request_data)
+        data, error = pessoa_schema.load(request_data, instance=pessoa)
         if error:
             return response_data_invalid('Pessoa', error.__str__())
 
@@ -200,7 +197,7 @@ class TelefoneResource(Resource):
 
             data, errors = [], []
             for telefone in query.all():  # for each meal
-                _data, _error = pessoa_schema.dump(telefone)
+                _data, _error = telefone_schema.dump(telefone)
                 data.append(_data)
                 if _error:  # Add error only if exists
                     errors.append(_error)

@@ -69,19 +69,23 @@ class TestTelefoneAPI:
     def test_get_telefone_by_pessoa(self):
         with self.test_app.app_context():
             self.db.session.add(self.pessoa)
+            self.db.session.commit()
+
+            self.telefone.pessoa_id = self.pessoa.id
             self.db.session.add(self.telefone)
             self.db.session.commit()
 
             response = self.client.get(
-                f'/pessoas', query_string={'pessoa_id': self.pessoa.id}
+                f'/telefones', query_string={'pessoa_id': self.pessoa.id}
             )
             _response = json.loads(response.data)
             error = _response.get('description')
 
             assert response.status_code == 200, error
+            assert _response['message'] == 'Recursos retornados com sucesso.', error
+            assert _response['total'] == 1, error
             assert type(_response['data']) == list, error
             assert len(_response['data']) > 0, error
-            assert _response['message'] == 'Recursos retornados com sucesso.', error
 
     def test_get_telefones(self):
         with self.test_app.app_context():
@@ -91,7 +95,7 @@ class TestTelefoneAPI:
             self.db.session.commit()
 
             response = self.client.get(
-                f'/pessoas'
+                f'/telefones'
             )
             _response = json.loads(response.data)
             error = _response.get('description')
