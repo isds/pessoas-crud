@@ -1,3 +1,5 @@
+Front feito com Angular.
+
 API para crud simples de cadastro de contatos.
 
 API feita com python usando Flask, SQLAlchemy, Marshmallow. 
